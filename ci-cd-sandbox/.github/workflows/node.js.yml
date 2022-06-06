@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+    
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,7 +20,9 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    - name: Checkout Repository
     - uses: actions/checkout@v3
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -40,12 +43,12 @@ jobs:
 
     - name: Deploy
     run: |
-      git config --global user.name TelleDelly
-      git config --global user.email martinwilson450@gmail.com
-      git remote set-url origin https://github.com/TelleDelly/CI-CD-Sandbox.git
+      git config --global user.name $user.name
+      git config --global user.email $user_email
+      git remote set-url origin https://${github_token}@github.com/${repository}
       npm run deploy 
     env:
       user_name: 'github-actions[bot]'
       user_email: 'github-actions[bot]@users.noreply.github.com'
-      github_token: {secrets.DEPLOY_ACTIONS_ACCESS_TOKEN}
-      repository: {github.repository} 
+      github_token: ${{secrets.DEPLOY_ACTIONS_ACCESS_TOKEN}}
+      repository: ${{github.repository}} 
