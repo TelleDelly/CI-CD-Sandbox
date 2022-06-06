@@ -6,8 +6,6 @@ name: CI/CD
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -21,7 +19,7 @@ jobs:
 
     steps:
     - name: Checkout Repository
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
@@ -30,25 +28,25 @@ jobs:
         cache: 'npm'
 
     - name: Install dependencies
-    run: npm install
+      run: npm install
 
     - name: Run tests
-    run: npm test -- --coverage
+      run: npm test -- --coverage
 
     - name: Codecov
-    uses: codecov/codecov-action@v3.1.0
+      uses: codecov/codecov-action@v3.1.0
 
     - name: Build
-    run: npm run build
+      run: npm run build
 
     - name: Deploy
-    run: |
-      git config --global user.name $user.name
-      git config --global user.email $user_email
-      git remote set-url origin https://${github_token}@github.com/${repository}
-      npm run deploy 
-    env:
-      user_name: 'github-actions[bot]'
-      user_email: 'github-actions[bot]@users.noreply.github.com'
-      github_token: ${{secrets.DEPLOY_ACTIONS_ACCESS_TOKEN}}
-      repository: ${{github.repository}} 
+      run: |
+        git config --global user.name $user.name
+        git config --global user.email $user_email
+        git remote set-url origin https://${github_token}@github.com/${repository}
+        npm run deploy 
+      env:
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        github_token: ${{secrets.DEPLOY_ACTIONS_ACCESS_TOKEN}}
+        repository: ${{github.repository}} 
